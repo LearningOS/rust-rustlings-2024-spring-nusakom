@@ -7,34 +7,49 @@
 // Execute `rustlings hint traits5` or use the `hint` watch subcommand for a
 // hint.
 
-// I AM NOT DONE
 
-pub trait SomeTrait {
-    fn some_function(&self) -> bool {
-        true
-    }
-}
 
-pub trait OtherTrait {
-    fn other_function(&self) -> bool {
-        true
-    }
-}
-
-struct SomeStruct {}
-struct OtherStruct {}
-
-impl SomeTrait for SomeStruct {}
-impl OtherTrait for SomeStruct {}
-impl SomeTrait for OtherStruct {}
-impl OtherTrait for OtherStruct {}
-
-// YOU MAY ONLY CHANGE THE NEXT LINE
-fn some_func(item: ??) -> bool {
-    item.some_function() && item.other_function()
-}
-
-fn main() {
-    some_func(SomeStruct {});
-    some_func(OtherStruct {});
+pub trait SomeTrait {  
+    fn some_function(&self) -> bool;  
+}  
+  
+pub trait OtherTrait {  
+    fn other_function(&self) -> bool;  
+}  
+  
+struct SomeStruct {}  
+  
+struct OtherStruct {}  
+  
+impl SomeTrait for SomeStruct {  
+    fn some_function(&self) -> bool {  
+        true  
+    }  
+}  
+  
+impl OtherTrait for SomeStruct {  
+    fn other_function(&self) -> bool {  
+        true  
+    }  
+}  
+  
+impl SomeTrait for OtherStruct {  
+    fn some_function(&self) -> bool {  
+        true  
+    }  
+}  
+  
+impl OtherTrait for OtherStruct {  
+    fn other_function(&self) -> bool {  
+        true  
+    }  
+}  
+  
+fn some_func(item: &(impl SomeTrait + OtherTrait)) -> bool {  
+    item.some_function() && item.other_function()  
+}  
+  
+fn main() {  
+    some_func(&SomeStruct {});  
+    some_func(&OtherStruct {});  
 }
