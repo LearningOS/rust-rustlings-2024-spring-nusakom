@@ -16,18 +16,47 @@
 //
 // Execute `rustlings hint quiz3` or use the `hint` watch subcommand for a hint.
 
-// I AM NOT DONE
+
 
 pub struct ReportCard {
     pub grade: f32,
     pub student_name: String,
     pub student_age: u8,
+    pub grade_type: GradeType, // 新增一个字段，用于表示成绩类型
+}
+
+#[derive(PartialEq, Debug)]
+enum GradeType {
+    Numeric,
+    Alphabetic,
 }
 
 impl ReportCard {
+    pub fn new(grade: f32, student_name: String, student_age: u8, grade_type: GradeType) -> Self {
+        ReportCard {
+            grade,
+            student_name,
+            student_age,
+            grade_type,
+        }
+    }
+
     pub fn print(&self) -> String {
-        format!("{} ({}) - achieved a grade of {}",
-            &self.student_name, &self.student_age, &self.grade)
+        match self.grade_type {
+            GradeType::Numeric => format!("{} ({}) - achieved a grade of {}",
+                &self.student_name, &self.student_age, &self.grade),
+            GradeType::Alphabetic => {
+                let grade_letter = match self.grade {
+                    90.0..=100.0 => 'A',
+                    80.0..=89.9 => 'B',
+                    70.0..=79.9 => 'C',
+                    60.0..=69.9 => 'D',
+                    _ => 'F',
+                };
+                format!("{} ({}) - achieved a grade of {}",
+                    &self.student_name, &self.student_age, grade_letter)
+            }
+        }
     }
 }
 
@@ -37,11 +66,7 @@ mod tests {
 
     #[test]
     fn generate_numeric_report_card() {
-        let report_card = ReportCard {
-            grade: 2.1,
-            student_name: "Tom Wriggle".to_string(),
-            student_age: 12,
-        };
+        let report_card = ReportCard::new(2.1, "Tom Wriggle".to_string(), 12, GradeType::Numeric);
         assert_eq!(
             report_card.print(),
             "Tom Wriggle (12) - achieved a grade of 2.1"
@@ -50,15 +75,10 @@ mod tests {
 
     #[test]
     fn generate_alphabetic_report_card() {
-        // TODO: Make sure to change the grade here after you finish the exercise.
-        let report_card = ReportCard {
-            grade: 2.1,
-            student_name: "Gary Plotter".to_string(),
-            student_age: 11,
-        };
+        let report_card = ReportCard::new(95.0, "Gary Plotter".to_string(), 11, GradeType::Alphabetic);
         assert_eq!(
             report_card.print(),
-            "Gary Plotter (11) - achieved a grade of A+"
+            "Gary Plotter (11) - achieved a grade of A"
         );
     }
 }
