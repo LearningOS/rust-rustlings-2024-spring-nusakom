@@ -7,12 +7,12 @@
 // Execute `rustlings hint modules2` or use the `hint` watch subcommand for a
 // hint.
 
-// I AM NOT DONE
+
 
 mod delicious_snacks {
-    // TODO: Fix these use statements
-    use self::fruits::PEAR as ???
-    use self::veggies::CUCUMBER as ???
+    // 为 fruits::PEAR 和 veggies::CUCUMBER 提供别名
+    pub use self::fruits::PEAR as fruit;
+    pub use self::veggies::CUCUMBER as veggie;
 
     mod fruits {
         pub const PEAR: &'static str = "Pear";
@@ -26,6 +26,7 @@ mod delicious_snacks {
 }
 
 fn main() {
+    // 使用别名来访问常量
     println!(
         "favorite snacks: {} and {}",
         delicious_snacks::fruit,
