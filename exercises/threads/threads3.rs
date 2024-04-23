@@ -3,64 +3,36 @@
 // Execute `rustlings hint threads3` or use the `hint` watch subcommand for a
 // hint.
 
-// I AM NOT DONE
 
-use std::sync::mpsc;
-use std::sync::Arc;
+
+use std::sync::{Arc, Mutex};
 use std::thread;
 use std::time::Duration;
 
-struct Queue {
-    length: u32,
-    first_half: Vec<u32>,
-    second_half: Vec<u32>,
-}
-
-impl Queue {
-    fn new() -> Self {
-        Queue {
-            length: 10,
-            first_half: vec![1, 2, 3, 4, 5],
-            second_half: vec![6, 7, 8, 9, 10],
-        }
-    }
-}
-
-fn send_tx(q: Queue, tx: mpsc::Sender<u32>) -> () {
-    let qc = Arc::new(q);
-    let qc1 = Arc::clone(&qc);
-    let qc2 = Arc::clone(&qc);
-
-    thread::spawn(move || {
-        for val in &qc1.first_half {
-            println!("sending {:?}", val);
-            tx.send(*val).unwrap();
-            thread::sleep(Duration::from_secs(1));
-        }
-    });
-
-    thread::spawn(move || {
-        for val in &qc2.second_half {
-            println!("sending {:?}", val);
-            tx.send(*val).unwrap();
-            thread::sleep(Duration::from_secs(1));
-        }
-    });
+struct JobStatus {
+    jobs_completed: u32,
 }
 
 fn main() {
-    let (tx, rx) = mpsc::channel();
-    let queue = Queue::new();
-    let queue_length = queue.length;
+    let status = Arc::new(Mutex::new(JobStatus { jobs_completed: 0 }));
+    let mut handles = vec![];
 
-    send_tx(queue, tx);
-
-    let mut total_received: u32 = 0;
-    for received in rx {
-        println!("Got: {}", received);
-        total_received += 1;
+    for _ in 0..10 {
+        let status_shared = Arc::clone(&status);
+        let handle = thread::spawn(move || {
+            thread::sleep(Duration::from_millis(250));
+            // Lock the mutex to safely update the shared value
+            let mut guard = status_shared.lock().unwrap();
+            guard.jobs_completed += 1;
+        });
+        handles.push(handle);
     }
 
-    println!("total numbers received: {}", total_received);
-    assert_eq!(total_received, queue_length)
+    for handle in handles {
+        handle.join().unwrap();
+    }
+
+    // Access the final value after all threads have completed
+    let final_jobs_completed = status.lock().unwrap().jobs_completed;
+    println!("jobs completed: {}", final_jobs_completed);
 }
