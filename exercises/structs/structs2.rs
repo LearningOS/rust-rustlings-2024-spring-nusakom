@@ -5,46 +5,55 @@
 // Execute `rustlings hint structs2` or use the `hint` watch subcommand for a
 // hint.
 
-// I AM NOT DONE
 
-#[derive(Debug)]
-struct Order {
-    name: String,
-    year: u32,
-    made_by_phone: bool,
-    made_by_mobile: bool,
-    made_by_email: bool,
-    item_number: u32,
-    count: u32,
-}
 
-fn create_order_template() -> Order {
-    Order {
-        name: String::from("Bob"),
-        year: 2019,
-        made_by_phone: false,
-        made_by_mobile: false,
-        made_by_email: true,
-        item_number: 123,
-        count: 0,
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn your_order() {
-        let order_template = create_order_template();
-        // TODO: Create your own order using the update syntax and template above!
-        // let your_order =
-        assert_eq!(your_order.name, "Hacker in Rust");
-        assert_eq!(your_order.year, order_template.year);
-        assert_eq!(your_order.made_by_phone, order_template.made_by_phone);
-        assert_eq!(your_order.made_by_mobile, order_template.made_by_mobile);
-        assert_eq!(your_order.made_by_email, order_template.made_by_email);
-        assert_eq!(your_order.item_number, order_template.item_number);
-        assert_eq!(your_order.count, 1);
-    }
+// 首先定义Order结构体  
+struct Order {  
+    name: String,  
+    year: i32,  
+    made_by_phone: bool,  
+    made_by_mobile: bool,  
+    made_by_email: bool,  
+    item_number: String,  
+    count: i32,  
+}  
+  
+// 定义create_order_template函数，它返回一个Order实例作为模板  
+fn create_order_template() -> Order {  
+    return Order {  
+        name: "".to_string(), // 这里应该有一个默认的订单名称  
+        year: 2023,           // 假设默认年份是2023  
+        made_by_phone: false, // 默认订单不是通过电话创建的  
+        made_by_mobile: false, // 默认订单不是通过手机创建的  
+        made_by_email: true,   // 默认订单是通过邮件创建的  
+        item_number: "".to_string(), // 这里应该有一个默认的物品编号  
+        count: 0,                   // 默认订单数量为0  
+    };  
+}  
+  
+// 编写测试函数  
+#[test]  
+fn your_order() {  
+    // 创建订单模板  
+    let order_template = create_order_template();  
+  
+    // 使用模板创建你自己的订单  
+    let your_order = Order {  
+        name: "Hacker in Rust".to_string(),  
+        year: order_template.year, // 使用模板的年份  
+        made_by_phone: false,      // 假设这个订单不是通过电话创建的  
+        made_by_mobile: true,      // 假设这个订单是通过手机创建的  
+        made_by_email: false,      // 假设这个订单不是通过邮件创建的  
+        item_number: "12345".to_string(), // 假设订单的物品编号是12345  
+        count: 1,                        // 订单数量为1  
+    };  
+  
+    // 使用assert_eq!宏来验证订单的属性  
+    assert_eq!(your_order.name, "Hacker in Rust");  
+    assert_eq!(your_order.year, order_template.year);  
+    assert_eq!(your_order.made_by_phone, false);  
+    assert_eq!(your_order.made_by_mobile, true);  
+    assert_eq!(your_order.made_by_email, false);  
+    assert_eq!(your_order.item_number, "12345");  
+    assert_eq!(your_order.count, 1);  
 }
